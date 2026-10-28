@@ -3,7 +3,9 @@
 Fresh start (2026-10-28). Nothing from the previous build carries over.
 
 ## Planning vault
-There is an Obsidian vault for this portfolio at `~/Developer/portfolio-vault` (start at `00 Home.md`). Keep decisions, roadmap and the build log there. It is not part of this repo and is not in git.
+There is an Obsidian vault for this portfolio at `~/Developer/portfolio-vault` (start at `00 Home.md`). It is not part of this repo and is not in git.
+
+**Every decision must be logged in the vault.** Any decision about stack, design, content, hosting, workflow or tooling gets a note in `Decisions/` (`YYYY-MM-DD Title.md`: date, status, decision, why) and a row in `Decision Log.md`, before or when it is acted on. Record completed work in `Build Log.md` and upcoming work in `Roadmap.md`.
 
 ## Stack
 Astro (static output) with React islands, TypeScript strict, pnpm. Deployed to GitHub Pages by `.github/workflows/deploy.yml`. Add Next.js only if a feature needs a server runtime, as a separate app.
