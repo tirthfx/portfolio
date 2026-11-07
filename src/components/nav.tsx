@@ -3,8 +3,27 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import LiquidCarveButton from "@/components/originkit/ui/liquid-carve-button";
 
-// Liquid carve effect (Originkit) goes on this bar once its source is available.
+// The carve reads colors as plain hex (not CSS variables), so pick them per theme.
+const CARVE = {
+  light: { fill: "#F1ECE2", blob: "#B23A2B" },
+  dark: { fill: "#1F1D1B", blob: "#E0674F" },
+};
+
+function useTheme() {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setTheme(root.dataset.theme === "dark" ? "dark" : "light");
+    read();
+    const mo = new MutationObserver(read);
+    mo.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => mo.disconnect();
+  }, []);
+  return theme;
+}
 const LINKS = [
   { href: "/lab/", label: "Lab" },
   { href: "/work/", label: "Work" },
@@ -15,6 +34,7 @@ const LINKS = [
 
 export default function Nav() {
   const path = usePathname();
+  const carve = CARVE[useTheme()];
   const current = LINKS.find((l) => path.startsWith(l.href.slice(0, -1)));
 
   const toggleTheme = () => {
@@ -26,7 +46,16 @@ export default function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
-      <nav className="flex w-full max-w-4xl items-center gap-3 rounded-full border border-line bg-paper/80 py-2 pr-3 pl-2 backdrop-blur-md sm:gap-5">
+      {/* Whole bar is the Originkit liquid carve surface: a blob carves into it and chases the cursor */}
+      <LiquidCarveButton
+        colors={{ fill: carve.fill, textColor: "inherit" }}
+        blob={{ size: 90, color: carve.blob, smoothness: 50 }}
+        rounded={100}
+        padding="0"
+        className="w-full max-w-4xl rounded-full border border-line"
+        style={{ cursor: "default" }}
+      >
+      <nav className="flex w-full items-center gap-3 py-2 pr-3 pl-2 sm:gap-5">
         <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Home">
           <Image src="/portfolio/pfp.jpg" alt="Tirth" width={44} height={44} priority
             className="size-11 rounded-full border border-line object-cover" />
@@ -35,7 +64,7 @@ export default function Nav() {
           </span>
         </Link>
 
-        <ul className="ml-auto flex items-center gap-0.5 overflow-x-auto rounded-full border border-line bg-paper-2/70 p-1 [scrollbar-width:none] sm:gap-1">
+        <ul className="ml-auto flex items-center gap-0.5 overflow-x-auto rounded-full border border-line p-1 [scrollbar-width:none] sm:gap-1">
           {LINKS.map((l) => {
             const active = current?.href === l.href;
             return (
@@ -58,6 +87,7 @@ export default function Nav() {
           <svg viewBox="0 0 24 24" className="hidden size-4 dark:block" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
         </button>
       </nav>
+      </LiquidCarveButton>
     </header>
   );
 }
