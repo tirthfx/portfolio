@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tirth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <script>
   try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
@@ -42,6 +45,16 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .04' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .42 0 0 0 0 .32 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
   }
 
+  /* Tiles loader (ported from Originkit "Tiles"). Sits under the grain so tiles look like paper too. */
+  #loader { position: fixed; inset: 0; z-index: 90; overflow: hidden; isolation: isolate; container-type: size; }
+  #loader .tile { position: absolute; background: var(--ink); }
+  #loader .tile > div { position: absolute; inset: 0; background: var(--paper); }
+  #count { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    mix-blend-mode: difference; color: #fff; pointer-events: none; white-space: nowrap; opacity: 0;
+    font: 400 min(30cqh, 40cqw)/1 "Instrument Serif", "Times New Roman", serif; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  #count > span { display: inline-flex; align-items: flex-start; }
+  #count .pct { font-size: .3em; font-style: italic; margin-top: .9em; margin-left: .08em; }
+
   .toggle { position: fixed; top: 16px; right: 16px; z-index: 50; background: none; border: 1px solid var(--line); color: var(--ink);
     width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; }
   .toggle svg { width: 17px; height: 17px; }
@@ -55,6 +68,111 @@
   <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
   <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
 </button>
+<div id="loader" aria-hidden="true">
+  <div id="tiles"></div>
+  <div id="count"><span><span id="num"></span><span class="pct">%</span></span></div>
+</div>
+<script>
+(() => {
+  // Tiles loader: tiles ink over in a fixed random order as the page loads,
+  // then shrink away in a diagonal wave from the bottom-left corner.
+  const MIN_TIME = 3;      // seconds the load plays at minimum
+  const REVEAL_S = 1.6;    // reveal wave length
+  const FADE_S = 0.35;
+  const SHORT_SIDE = 7;    // tiles across the short side
+  const INK_WINDOW = 0.04; // share of the load one tile takes to ink in
+
+  const loader = document.getElementById('loader');
+  const tilesEl = document.getElementById('tiles');
+  const countEl = document.getElementById('count');
+  const numEl = document.getElementById('num');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const rand = seed => { let a = seed >>> 0; return () => {
+    a = (a + 0x6d2b79f5) >>> 0; let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; };
+  const clamp = x => x < 0 ? 0 : x > 1 ? 1 : x;
+  const seg = (x, a, b) => clamp((x - a) / Math.max(1e-6, b - a));
+  const outCubic = x => 1 - Math.pow(1 - x, 3);
+  const inOutCubic = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
+  // Simulated load: uneven chunks landing at different times; exactly 1 at loadS.
+  const loadCurve = (seed, loadS) => {
+    const r = rand(seed), k = Math.min(1, loadS / 4.4), chunks = []; let total = 0;
+    for (let i = 0; i < 7; i++) { const size = .4 + r() * 1.2;
+      chunks.push({ size, start: r() * .78 * loadS, len: (.25 + r() * .9) * k }); total += size; }
+    chunks.push({ size: total * .12, start: loadS - .45 * k, len: .45 * k }); total *= 1.12;
+    return t => { if (t >= loadS) return 1; let p = 0;
+      for (const c of chunks) { const x = clamp((t - c.start) / Math.max(1e-3, c.len)); p += c.size * x * x * (3 - 2 * x); }
+      return Math.min(.999, p / total); };
+  };
+  // Real load only ever holds the simulated curve back.
+  const realLoad = () => {
+    if (document.readyState === 'complete') return 1;
+    const imgs = document.images; let done = 0;
+    for (const im of imgs) if (im.complete) done++;
+    const frac = imgs.length ? done / imgs.length : 1;
+    const fonts = document.fonts && document.fonts.status === 'loaded' ? 1 : 0;
+    return Math.min(.95, .15 + .6 * frac + .2 * fonts);
+  };
+
+  let cols = 0, rows = 0, tiles = [], papers = [], order = [];
+  const build = () => {
+    const w = innerWidth, h = innerHeight, cell = Math.min(w, h) / SHORT_SIDE;
+    const c = Math.max(1, Math.round(w / cell)), r = Math.max(1, Math.round(h / cell));
+    if (c === cols && r === rows) return;
+    cols = c; rows = r; const count = cols * rows;
+    const rr = rand(count * 7919 + 13);
+    order = Array.from({ length: count }, () => rr() * (1 - INK_WINDOW));
+    tilesEl.innerHTML = ''; tiles = []; papers = [];
+    for (let i = 0; i < count; i++) {
+      const t = document.createElement('div'), p = document.createElement('div');
+      t.className = 'tile';
+      const x = i % cols, y = Math.floor(i / cols);
+      // 1px overlap so no seam shows between closed tiles
+      t.style.cssText = `left:${x * 100 / cols}%;top:${y * 100 / rows}%;width:calc(${100 / cols}% + 1px);height:calc(${100 / rows}% + 1px)`;
+      t.appendChild(p); tilesEl.appendChild(t); tiles.push(t); papers.push(p);
+    }
+  };
+
+  const loadS = reduced ? .6 : MIN_TIME, revealS = reduced ? .4 : REVEAL_S, curve = loadCurve(7, loadS);
+  let t = 0, progress = 0, revealAt = -1, last = -1;
+
+  const draw = () => {
+    const reveal = revealAt < 0 ? 0 : clamp((t - revealAt) / revealS);
+    for (let i = 0; i < tiles.length; i++) {
+      papers[i].style.opacity = 1 - seg(progress, order[i], order[i] + INK_WINDOW);
+      const c = i % cols, r = Math.floor(i / cols);
+      const d = .5 * (cols > 1 ? c / (cols - 1) : 0) + .5 * (rows > 1 ? (rows - 1 - r) / (rows - 1) : 0);
+      tiles[i].style.transform = `scale(${1 - inOutCubic(seg(reveal, d * .55, d * .55 + .45))})`;
+    }
+    const digits = String(Math.round(progress * 100));
+    if (numEl.textContent !== digits) numEl.textContent = digits;
+    countEl.style.opacity = outCubic(seg(t, .1, .8)) * (1 - seg(reveal, 0, .15));
+  };
+
+  const tick = now => {
+    const dt = last < 0 ? 0 : Math.min(.05, (now - last) / 1000); last = now; t += dt;
+    if (revealAt < 0) {
+      const target = Math.min(curve(t), realLoad());
+      progress = target >= 1 ? 1 : Math.min(target, progress + dt * 1.5);
+      if (progress >= 1 && t >= loadS) revealAt = t;
+    }
+    draw();
+    if (revealAt >= 0 && t - revealAt >= revealS) {
+      loader.style.transition = `opacity ${FADE_S}s ease`; loader.style.opacity = 0; loader.style.pointerEvents = 'none';
+      setTimeout(() => loader.remove(), FADE_S * 1000);
+      return;
+    }
+    requestAnimationFrame(tick);
+  };
+
+  build(); draw();
+  addEventListener('resize', () => { build(); draw(); });
+  requestAnimationFrame(tick);
+})();
+</script>
 <script>
   const root = document.documentElement;
   document.getElementById('toggle').addEventListener('click', () => {
