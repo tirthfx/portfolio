@@ -8,8 +8,8 @@ import LiquidCarveButton from "@/components/originkit/ui/liquid-carve-button";
 
 // The carve reads colors as plain hex (not CSS variables), so pick them per theme.
 const CARVE = {
-  light: { fill: "#F1ECE2", blob: "#B23A2B" },
-  dark: { fill: "#1F1D1B", blob: "#E0674F" },
+  light: { fill: "#F1ECE2", blob: "#FF3737" },
+  dark: { fill: "#1F1D1B", blob: "#FF3737" },
 };
 
 function useTheme() {
