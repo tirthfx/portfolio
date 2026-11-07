@@ -52,8 +52,9 @@ export default function Nav() {
         blob={{ size: 90, color: carve.blob, smoothness: 50 }}
         rounded={100}
         padding="0"
-        className="w-full max-w-4xl rounded-full border border-line"
-        style={{ cursor: "default" }}
+        className="w-full max-w-4xl rounded-full"
+        // clip 2px so the blob layer never shows as a thin red ring around the bar
+        style={{ cursor: "default", clipPath: "inset(2px round 9999px)" }}
       >
       <nav className="flex w-full items-center gap-3 py-2 pr-3 pl-2 sm:gap-5">
         <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Home">
