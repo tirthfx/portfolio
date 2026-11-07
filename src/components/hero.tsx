@@ -84,7 +84,7 @@ export default function Hero() {
       shapes={ready ? SHAPES : []}
       // Room for the bigger pile (Kokonut's default is 0.3; extra shapes are dropped past this)
       fill={0.5}
-      className="min-h-svh justify-center bg-transparent pt-0 pb-0 text-ink dark:bg-transparent dark:text-ink"
+      className="min-h-svh justify-center bg-transparent pt-0 pb-[22vh] text-ink dark:bg-transparent dark:text-ink"
     />
   );
 }
