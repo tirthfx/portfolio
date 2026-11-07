@@ -53,7 +53,8 @@ body::after {
 /* Tiles loader */
 #loader { background: var(--paper); position: fixed; inset: 0; z-index: 90; overflow: hidden; isolation: isolate; container-type: size; }
 #loader .tile { position: absolute; background: var(--ink); }
-#loader .tile > div { position: absolute; inset: 0; background: var(--paper); }
+/* -1px so each paper square covers its own tile's ink edge (no hairline grid on pure white) */
+#loader .tile > div { position: absolute; inset: -1px; background: var(--paper); }
 #loader .count { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   mix-blend-mode: difference; color: #fff; pointer-events: none; white-space: nowrap; opacity: 0;
   font: 400 min(30cqh, 40cqw)/1 var(--font-instrument), "Times New Roman", serif; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
