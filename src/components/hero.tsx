@@ -75,7 +75,7 @@ export default function Hero() {
       key={ready ? "drop" : "wait"}
       as="h1"
       title={
-        <span className="font-display text-6xl font-bold tracking-tight sm:text-8xl">
+        <span className="font-display text-5xl leading-[1.15] font-extrabold tracking-tight sm:text-8xl">
           Hi, I&apos;m Tirth
         </span>
       }
