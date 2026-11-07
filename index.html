@@ -153,7 +153,7 @@
   };
 
   const tick = now => {
-    const dt = last < 0 ? 0 : Math.min(.05, (now - last) / 1000); last = now; t += dt;
+    const dt = last < 0 ? 0 : Math.min(.25, (now - last) / 1000); last = now; t += dt;
     if (revealAt < 0) {
       const target = Math.min(curve(t), realLoad());
       progress = target >= 1 ? 1 : Math.min(target, progress + dt * 1.5);
