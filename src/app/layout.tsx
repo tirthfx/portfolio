@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Inter, Instrument_Serif, Fraunces } from "next/font/google";
 import Loader from "@/components/loader";
 import Nav from "@/components/nav";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const fraunces = Fraunces({ variable: "--font-fraunces", weight: "700", style: "italic", subsets: ["latin"] });
 const instrument = Instrument_Serif({ variable: "--font-instrument", weight: "400", style: ["normal", "italic"], subsets: ["latin"] });
 
 export const metadata: Metadata = { title: "Tirth" };
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className={`${inter.variable} ${instrument.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${instrument.variable} ${fraunces.variable} font-sans antialiased`}>
         <Loader />
         <Nav />
         {children}

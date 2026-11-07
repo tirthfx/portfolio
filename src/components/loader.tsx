@@ -116,7 +116,12 @@ export default function Loader() {
       if (revealAt < 0) {
         const target = Math.min(curve(t), realLoad());
         progress = target >= 1 ? 1 : Math.min(target, progress + dt * 1.5);
-        if (progress >= 1 && t >= loadS) revealAt = t;
+        if (progress >= 1 && t >= loadS) {
+          revealAt = t;
+          // Let the page start its entrance (e.g. shapes dropping) as the tiles clear
+          (window as Window & { __loaderRevealed?: boolean }).__loaderRevealed = true;
+          window.dispatchEvent(new Event("loader:reveal"));
+        }
       }
       draw();
       if (revealAt >= 0 && t - revealAt >= revealS) {
