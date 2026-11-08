@@ -26,7 +26,6 @@ function useTheme() {
 }
 const LINKS = [
   { href: "/lab/", label: "Lab" },
-  { href: "/work/", label: "Work" },
   { href: "/blog/", label: "Blog" },
   { href: "/about/", label: "About" },
   { href: "/contact/", label: "Contact" },
