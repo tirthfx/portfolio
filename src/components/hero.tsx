@@ -80,8 +80,11 @@ export default function Hero() {
         </span>
       }
       description={
-        <span className="block max-w-xl text-pretty text-lg text-ink-soft sm:text-xl">
-          Software engineer building AI agents, dev tools, and breaking LLMs to make them safer.
+        <span className="block text-xl leading-snug text-ink-soft tracking-tight sm:text-[26px]">
+          Software engineer building <span className="font-medium text-ink">AI agents</span>,{" "}
+          <span className="whitespace-nowrap font-medium text-ink">dev tools</span>, and{" "}
+          <span className="font-display italic text-[#E0402F] dark:text-[#F95C4B]">breaking LLMs</span> to make them
+          safer.
         </span>
       }
       actions={null}

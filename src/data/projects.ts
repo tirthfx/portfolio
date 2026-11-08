@@ -30,6 +30,10 @@ export interface Project {
   repo?: string;
   /** Three short points for the back of the Lab card. */
   highlights: [string, string, string];
+  /** One headline number for the card front. */
+  stat: { value: string; label: string };
+  /** What comes next, for the card back. */
+  next: string;
   /** What the status card says. */
   statusNote: string;
   sections: Section[];
@@ -53,6 +57,8 @@ export const PROJECTS: Project[] = [
       "Refusal re-fusion defense brings ablation ASR from 95% back to 15%",
       "Run fully locally on Apple Silicon, no cloud GPU or API",
     ],
+    stat: { value: "84.8%", label: "attack success with prefix injection, the strongest black-box jailbreak" },
+    next: "A held-out split for the refusal direction, then replication on a second open-weight model",
     statusNote: "Complete. Full technical write-up and a non-technical blog post are in the repo.",
     sections: [
       {
@@ -149,6 +155,8 @@ export const PROJECTS: Project[] = [
       "Guardian: a deny-only LLM judge for sandbox escalation requests",
       "Each sub-agent works in its own git worktree; merges are plain git",
     ],
+    stat: { value: "9", label: "features ported from Codex Harness and Grok Build, across 5 phases" },
+    next: "Fix the open 429 on the Antigravity provider, then pick the build back up",
     statusNote: "All five phases are complete and tested. Paused, not abandoned: the build docs explain how to pick it back up.",
     sections: [
       {
@@ -215,6 +223,8 @@ export const PROJECTS: Project[] = [
       "100-run study of five context-compaction strategies",
       "Full history passed 20/20; truncation and retrieval 0/20",
     ],
+    stat: { value: "100", label: "runs comparing 5 context-compaction strategies, about 8k model calls" },
+    next: "Settle whether pass rate falls as tasks get longer",
     statusNote: "Complete. The 100-run main experiment is finished and analysed; the repo is private.",
     sections: [
       {
@@ -283,6 +293,8 @@ export const PROJECTS: Project[] = [
       "Promi: students ask questions over the college's own notes",
       "Assessment Engine: plans question papers and grades scripts",
     ],
+    stat: { value: "LTI 1.3", label: "AI tools delivered inside the college's own Moodle" },
+    next: "A teacher page for grading scripts",
     statusNote: "In progress. The local Moodle sandbox and the backend are built and tested; the repo is private.",
     sections: [
       {
@@ -336,6 +348,8 @@ export const PROJECTS: Project[] = [
       "Trajectory view of every model call, tool call and result",
       "Works end to end on macOS, with strict sandboxing of the webview",
     ],
+    stat: { value: "3", label: "providers you can sign in with: DeepSeek, Claude and Grok" },
+    next: "A swarm view of parallel agents, each in its own worktree lane",
     statusNote: "Working end to end on macOS (roadmap phases 0–8). The repo is private.",
     sections: [
       {

@@ -677,7 +677,7 @@ export default function ShapeHero({
           {title}
         </Heading>
         {description ? (
-          <p className="mt-5 max-w-md text-pretty text-base text-zinc-500 sm:text-lg dark:text-zinc-400">
+          <p className="mt-6 max-w-2xl text-balance text-base text-zinc-500 sm:text-lg dark:text-zinc-400">
             {description}
           </p>
         ) : null}
