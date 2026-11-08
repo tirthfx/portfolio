@@ -9,7 +9,7 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <CardFlip
       label={project.title}
-      className="aspect-[4/5] w-full sm:aspect-[16/11]"
+      className="aspect-[3/4] w-full sm:aspect-[5/4]"
       faceClassName="rounded-3xl border-[#E4DED2] bg-[#FCFBF8] text-black dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
       front={<Front project={project} />}
       back={<Back project={project} />}
@@ -55,22 +55,29 @@ function Front({ project }: { project: Project }) {
         </span>
       </div>
 
-      <p className={`mt-5 font-mono text-xs uppercase tracking-[0.14em] ${MUTED}`}>{project.month}</p>
-      <h3 className="mt-1 font-display text-3xl italic leading-[1.05] tracking-tight sm:text-4xl">{project.title}</h3>
+      <h3 className="mt-6 font-display text-3xl italic leading-[1.05] tracking-tight sm:text-4xl">{project.title}</h3>
       <p className={`mt-3 line-clamp-3 text-[15px] leading-relaxed ${MUTED}`}>{project.summary}</p>
 
-      <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-        {project.stack.slice(0, 4).map((s) => (
-          <span key={s} className="rounded-full border border-[#E4DED2] px-2.5 py-1 font-mono text-[11px] uppercase tracking-wide dark:border-zinc-700">
-            {s}
-          </span>
-        ))}
-      </div>
+      {/* Stats block, like the original ticket card */}
+      <dl className="mt-auto grid grid-cols-2 gap-x-6 gap-y-4 pt-5">
+        <div className="col-span-2">
+          <dt className={`text-xs ${MUTED}`}>Stack</dt>
+          <dd className="mt-0.5 font-medium text-[15px]">{project.stack.slice(0, 3).join(" · ")}</dd>
+        </div>
+        <div>
+          <dt className={`text-xs ${MUTED}`}>Started</dt>
+          <dd className="mt-0.5 font-medium text-[15px]">{project.month}</dd>
+        </div>
+        <div>
+          <dt className={`text-xs ${MUTED}`}>Repo</dt>
+          <dd className="mt-0.5 font-medium text-[15px]">{project.repo ? "Public" : "Private"}</dd>
+        </div>
+      </dl>
 
       <div className="-mx-6 my-4 border-t border-dashed border-[#D6CEBF] sm:-mx-7 dark:border-zinc-700" />
 
       <div className="flex items-center justify-between">
-        <p className={`text-xs ${MUTED}`}>Flip for highlights · {project.repo ? "Public repo" : "Private repo"}</p>
+        <p className={`text-xs ${MUTED}`}>Flip for highlights</p>
         <ViewFull project={project} />
       </div>
     </div>

@@ -79,7 +79,11 @@ export default function Hero() {
           Hi, I&apos;m Tirth
         </span>
       }
-      description={null}
+      description={
+        <span className="block max-w-xl text-pretty text-lg text-ink-soft sm:text-xl">
+          Software engineer building AI agents, dev tools, and breaking LLMs to make them safer.
+        </span>
+      }
       actions={null}
       shapes={ready ? SHAPES : []}
       // Room for the bigger pile (Kokonut's default is 0.3; extra shapes are dropped past this)
