@@ -51,7 +51,8 @@ const BUMP = 0.45;
 const WAVE = 0.7;
 const PADDING = 28;
 const REST_EPSILON = 0.0005;
-const LABELS = ["Mon", "", "Wed", "", "Fri", "", ""];
+// Rows run Sunday to Saturday (portfolio change; Kokonut ships Monday-first).
+const LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
 export interface ActivityTerrainProps {
   /** Count per day, oldest first. */
@@ -142,8 +143,8 @@ function parseDay(value: string) {
 function buildCells(data: number[], endDate: string) {
   const end = parseDay(endDate);
   const start = new Date(end.getTime() - (data.length - 1) * 86_400_000);
-  // Rows run Monday to Sunday.
-  const offset = (start.getUTCDay() + 6) % 7;
+  // Rows run Sunday to Saturday.
+  const offset = start.getUTCDay();
   const max = Math.max(1, ...data);
   return data.map((count, index): Cell => {
     const slot = index + offset;
