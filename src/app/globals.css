@@ -7,9 +7,9 @@
 
 /* Paper tokens: never pure black/white. Notes in portfolio-vault/02 Design */
 :root {
-  /* Pure black / white theme (2026-11-07, replaces cream/black paper — see vault Decision Log) */
-  --paper: #FFFFFF; --paper-2: #F4F4F5; --ink: #000000; --ink-soft: #71717A;
-  --line: #E4E4E7; --accent: #F97316;
+  /* Palette (2026-11-08): Paper #F6F4F1, Stone #E4DED2, Coral #F95C4B, Black #000000 */
+  --paper: #F6F4F1; --paper-2: #E4DED2; --ink: #000000; --ink-soft: #6B655C;
+  --line: #E4DED2; --accent: #F95C4B;
   /* Paper grain is off for the pure look; raise these to bring it back */
   --grain-opacity: 0; --grain-blend: multiply;
   --background: var(--paper); --foreground: var(--ink);
@@ -17,7 +17,7 @@
 }
 :root[data-theme="dark"] {
   --paper: #000000; --paper-2: #18181B; --ink: #FFFFFF; --ink-soft: #A1A1AA;
-  --line: #27272A; --accent: #F97316;
+  --line: #27272A; --accent: #F95C4B;
   --grain-opacity: 0; --grain-blend: screen;
   color-scheme: dark;
 }

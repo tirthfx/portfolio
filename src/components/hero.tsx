@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import ShapeHero, { type HeroShape } from "@/components/kokonutui/shape-hero";
 import { cn } from "@/lib/utils";
 
-// Kokonut UI's original shape colors: white / near-black pills and orange accents.
 const PILL = "h-14 px-7 font-medium text-lg tracking-tight";
+// Palette: Paper / Stone / Coral / Black (dark mode keeps Kokonut's zinc pills)
 const OUTLINE =
-  "border border-zinc-200 bg-white text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100";
-const SOLID = "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900";
-const ACCENT = "bg-orange-500 text-white";
+  "border border-[#D6CEBF] bg-[#E4DED2] text-black dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100";
+const SOLID = "bg-black text-[#F6F4F1] dark:bg-[#F6F4F1] dark:text-black";
+const ACCENT = "bg-[#F95C4B] text-white";
 
 const pill = (id: string, content: string, look: string): HeroShape => ({ id, content, className: cn(PILL, look) });
 const dot = (id: string, size: string, look: string): HeroShape => ({ id, className: cn(size, look) });

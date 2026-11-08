@@ -8,8 +8,8 @@ import LiquidCarveButton from "@/components/originkit/ui/liquid-carve-button";
 
 // The carve reads colors as plain hex (not CSS variables), so pick them per theme.
 const CARVE = {
-  light: { fill: "#F4F4F5", blob: "#FF3737" },
-  dark: { fill: "#18181B", blob: "#FF3737" },
+  light: { fill: "#E4DED2", blob: "#F95C4B" },
+  dark: { fill: "#18181B", blob: "#F95C4B" },
 };
 
 function useTheme() {
@@ -52,7 +52,7 @@ export default function Nav() {
         blob={{ size: 90, color: carve.blob, smoothness: 50 }}
         rounded={100}
         padding="0"
-        className="w-full max-w-4xl rounded-full"
+        className="w-full max-w-3xl rounded-full"
         // clip 2px so the blob layer never shows as a thin red ring around the bar
         style={{ cursor: "default", clipPath: "inset(2px round 9999px)" }}
       >
