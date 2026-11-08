@@ -56,16 +56,21 @@ function Front({ project }: { project: Project }) {
       <h3 className="mt-6 font-display text-4xl italic leading-[1.02] tracking-tight sm:text-[44px]">{project.title}</h3>
       <p className={`mt-3 line-clamp-3 text-[15px] leading-relaxed ${MUTED}`}>{project.summary}</p>
 
-      {/* Headline number */}
-      <div className="mt-6 flex items-baseline gap-4 rounded-2xl bg-[#F1ECE3] px-5 py-4 dark:bg-zinc-800/60">
-        <span className="shrink-0 font-display text-4xl italic leading-none tracking-tight text-[#E0402F] dark:text-[#F95C4B]">
-          {project.stat.value}
-        </span>
-        <span className={`text-sm leading-snug ${MUTED}`}>{project.stat.label}</span>
+      {/* Headline numbers */}
+      {/* Stat boxes grow into any leftover height, so short cards have no empty gap */}
+      <div className="mt-6 grid min-h-0 flex-1 grid-cols-2 gap-3">
+        {project.stats.map((st) => (
+          <div key={st.value} className="flex flex-col justify-between rounded-2xl bg-[#F1ECE3] px-4 py-4 dark:bg-zinc-800/60">
+            <p className="font-display text-3xl italic leading-none tracking-tight text-[#E0402F] sm:text-4xl dark:text-[#F95C4B]">
+              {st.value}
+            </p>
+            <p className={`mt-2 text-[13px] leading-snug ${MUTED}`}>{st.label}</p>
+          </div>
+        ))}
       </div>
 
       {/* Stats block, like the original ticket card */}
-      <dl className="mt-auto grid grid-cols-3 gap-x-6 gap-y-4 pt-6">
+      <dl className="grid grid-cols-3 gap-x-6 gap-y-4 pt-6">
         <div className="col-span-3">
           <dt className={`text-xs ${MUTED}`}>Stack</dt>
           <dd className="mt-0.5 font-medium text-[15px]">{project.stack.slice(0, 4).join(" · ")}</dd>
@@ -102,7 +107,9 @@ function Back({ project }: { project: Project }) {
         <span className={`font-mono text-xs ${MUTED}`}>{project.month}</span>
       </div>
 
-      <ul className="mt-5 space-y-3.5">
+      {/* Sections share the leftover height evenly, so no single empty gap sits above the buttons */}
+      <div className="flex flex-1 flex-col justify-evenly py-2">
+      <ul className="space-y-3.5">
         {project.highlights.map((h) => (
           <li key={h} className="flex gap-3 text-[15px] leading-snug">
             <span className="mt-[7px] size-1.5 shrink-0 rounded-full bg-[#F95C4B]" />
@@ -111,23 +118,29 @@ function Back({ project }: { project: Project }) {
         ))}
       </ul>
 
-      <div className="mt-7">
+      <div>
+        <span className={LABEL}>Status</span>
+        <p className="mt-2 text-[15px] leading-snug">{project.statusNote}</p>
+      </div>
+
+      <div>
         <span className={LABEL}>Next up</span>
         <p className="mt-2 text-[15px] leading-snug">{project.next}</p>
       </div>
 
-      <div className="mt-7">
+      <div>
         <span className={LABEL}>Built with</span>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {project.stack.map((s) => (
             <span key={s} className="rounded-full border border-[#E4DED2] px-2.5 py-1 text-xs dark:border-zinc-700">{s}</span>
           ))}
         </div>
+
+        <p className={`mt-3 text-xs ${MUTED}`}>{project.tags.map((t) => `#${t}`).join("  ")}</p>
+      </div>
       </div>
 
-      <p className={`mt-4 text-xs ${MUTED}`}>{project.tags.map((t) => `#${t}`).join("  ")}</p>
-
-      <div className="mt-auto flex items-center justify-between border-t border-[#E4DED2] pt-5 dark:border-zinc-800">
+      <div className="flex items-center justify-between border-t border-[#E4DED2] pt-5 dark:border-zinc-800">
         {project.repo ? (
           <a
             href={project.repo}
