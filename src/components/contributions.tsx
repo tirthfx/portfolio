@@ -8,8 +8,10 @@ const COLORS =
   "[--terrain-0:#ECE7DF] [--terrain-1:#D6CEBF] [--terrain-2:#A89F90] [--terrain-3:#5C554B] [--terrain-4:#000000] [--terrain-accent:#F95C4B] [--terrain-text:#6B655C] " +
   "dark:[--terrain-0:#1C1B1A] dark:[--terrain-1:#3A3733] dark:[--terrain-2:#6B655C] dark:[--terrain-3:#B5ADA0] dark:[--terrain-4:#F6F4F1] dark:[--terrain-accent:#F95C4B] dark:[--terrain-text:#A39B8F]";
 
-// Show the last 3 months (13 weeks); the data file holds a full year.
-const DAYS_SHOWN = 13 * 7;
+// Show the last 3 months as 13 Sunday-to-Saturday columns: this week so far + 12 full weeks.
+// The data file holds a full year.
+const endDow = new Date(`${contributions.endDate}T00:00:00Z`).getUTCDay(); // 0 = Sunday
+const DAYS_SHOWN = 12 * 7 + endDow + 1;
 
 /** Tirth's GitHub contributions for the last 3 months (data refreshed by scripts/fetch-contributions.mjs). */
 export default function Contributions() {
